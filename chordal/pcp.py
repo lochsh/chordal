@@ -1,6 +1,6 @@
 import collections
 import numpy as np
-import scipy
+from scipy.io import wavfile
 
 
 class ChordRecogniser:
@@ -23,7 +23,7 @@ class ChordRecogniser:
 class AudioProcessor:
 
     def __init__(self, file_name, window_len_s=0.025, overlap_s=0.01):
-        self.f_s, self.data = scipy.io.wavefile(file_name)
+        self.f_s, self.data = wavfile.read(file_name)
         self.frame_size = int(self.f_s * window_len_s)
         self.overlap = int(self.f_s * overlap_s)
         self.num_frames = len(self.data)/self.overlap
