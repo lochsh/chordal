@@ -23,10 +23,16 @@ class ChordRecogniser:
 class AudioProcessor:
 
     def __init__(self, file_name, window_len_s=0.025, overlap_s=0.01):
-        self.f_s, self.data = wavfile.read(file_name)
+        self.f_s, raw_data = wavfile.read(file_name)
+        self.data = self.combine_wav_channels(raw_data)
+
         self.frame_size = int(self.f_s * window_len_s)
         self.overlap = int(self.f_s * overlap_s)
         self.num_frames = len(self.data)/self.overlap
+
+    @staticmethod
+    def combine_wav_channels(channels):
+        return channels[:, 0] + channels[:, 1]
 
     def overlapping_frames(self):
         frame = collections.deque(maxlen=self.frame_size)
