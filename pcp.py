@@ -1,15 +1,18 @@
 import numpy as np
 
 
-def fft_bin_to_freq(f_s, bin_count, ft_length):
-    return f_s * bin_count / ft_length
+class ChordRecogniser:
 
+    def __init__(self, sampling_freq, fft_length):
+        self.f_s = sampling_freq
+        self.N = fft_length
 
-def spectrum_bin_to_pcp_index(l, f_ref, f_s, N):
-    p = round(12 * np.log2((f_s * l) / (N * f_ref)) % 12) if l != 0 else -1
-    return p
+    def fft_bin_to_freq(self, bin_count):
+        return self.f_s * bin_count / self.N
 
+    def spectrum_bin_to_pcp_index(self, l, f_ref):
+        round(12 * np.log2(self.fft_bin_to_freq(l) / f_ref) % 12)
 
-def pcp(pcp_index, N):
-    return sum(np.fft(l) for l in range(1, N/2 - 1)
-               if spectrum_bin_to_pcp_index(l) == pcp_index)
+    def pcp(self, pcp_index, f_ref):
+        return sum(np.fft(l) for l in range(1, self.N/2 - 1)
+                   if self.spectrum_bin_to_pcp_index(l, f_ref) == pcp_index)
