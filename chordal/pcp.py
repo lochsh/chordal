@@ -16,7 +16,7 @@ class ChordRecogniser:
         return round(12 * np.log2(self.fft_bin_to_freq(l) / f_ref) % 12)
 
     def pcp(self, pcp_index, f_ref):
-        return sum(np.fft(l) for l in range(1, self.N/2 - 1)
+        return sum(abs(np.fft(l))**2 for l in range(1, self.N/2 - 1)
                    if self.spectrum_bin_to_pcp_index(l, f_ref) == pcp_index)
 
 
