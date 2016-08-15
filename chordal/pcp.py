@@ -42,5 +42,5 @@ class AudioProcessor:
 
         for i in range(1, self.num_frames):
             frame.extend(self.data[i * self.frame_size - self.overlap:
-                                   (i + 1) * self.frame_size] - self.overlap)
+                                   (i + 1) * self.frame_size - self.overlap])
             yield frame
