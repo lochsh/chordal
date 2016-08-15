@@ -1,1 +1,1 @@
-import pcp
+from chordal.pcp import AudioProcessor, ChordRecogniser

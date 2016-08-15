@@ -8,11 +8,11 @@ mock_data = np.array(range(10000))
 def mock_wavfile_read(*args):
     return 44100, mock_data
 
-chordal.pcp.AudioProcessor.read_wavfile = mock_wavfile_read
+chordal.AudioProcessor.read_wavfile = mock_wavfile_read
 
 
 class TestOverlappingFrames:
-    ap = chordal.pcp.AudioProcessor('')
+    ap = chordal.AudioProcessor('')
 
     def test_overlapping_frames_yields_correct_initial_frame(self):
         frames = self.ap.overlapping_frames()
