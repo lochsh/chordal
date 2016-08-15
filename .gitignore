@@ -2,4 +2,4 @@
 venv
 *wav
 *pyc
-chordal/tests/.cache
+tests/.cache
