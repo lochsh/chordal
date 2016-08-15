@@ -23,10 +23,4 @@ class TestOverlappingFrames:
         next(frames)
         assert (next(frames) ==
                 mock_data[self.ap.frame_size - self.ap.overlap:
-                          2*self.ap.frame_size - self.ap.overlap]).all()
-
-if __name__ == '__main__':
-    t = TestOverlappingFrames()
-    frames = t.ap.overlapping_frames()
-    for _ in range(10):
-        print(next(frames))
+                          2 * self.ap.frame_size - self.ap.overlap]).all()
