@@ -24,3 +24,12 @@ class TestOverlappingFrames:
         assert (next(frames) ==
                 mock_data[self.ap.frame_size - self.ap.overlap:
                           2 * self.ap.frame_size - self.ap.overlap]).all()
+
+
+def test_ref_frequencies():
+    ref_frequencies = [440.000, 466.164, 493.883, 523.251, 554.365,
+                       587.330, 622.254, 659.255, 698.456, 739.989,
+                       783.991, 830.609]
+    print(chordal.ChordRecogniser.ref_frequencies)
+    assert np.allclose(list(chordal.ChordRecogniser.ref_frequencies.values()),
+                       ref_frequencies)
