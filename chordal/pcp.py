@@ -31,6 +31,12 @@ class ChordRecogniser:
 
 
 class AudioProcessor:
+    """
+    Performs audio pre-processing,
+
+    Pre-processes audio from a wavfile, combining the two channels and
+    dividing the audio into overlapping frames.
+    """
 
     def __init__(self, file_name, window_len_s=0.025, overlap_s=0.01):
         self.f_s, self.data = self.read_wavfile(file_name)
@@ -45,6 +51,13 @@ class AudioProcessor:
         return f_s, raw_data[:, 0] + raw_data[:, 1]
 
     def overlapping_frames(self):
+        """
+        Generates overlapping frames
+
+        Generator that yields a deque containing the current frame of audio
+        data.  The deque contents is shifted by the frame size minus the
+        overlap on each iteration, to minimise computation.
+        """
         frame = collections.deque(maxlen=self.frame_size)
         frame.extend(self.data[:self.frame_size])
         yield frame
