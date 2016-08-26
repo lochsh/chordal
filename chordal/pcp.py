@@ -3,7 +3,8 @@ import numpy as np
 from scipy.io import wavfile
 
 
-class ChordRecogniser:
+class PcpCalculator:
+    """Calculates PCP vectors"""
     ref_freqs = {n: 2**(n/12) * 440.0 for n in range(12)}
 
     def __init__(self, sampling_freq, fft_length):
@@ -20,13 +21,13 @@ class ChordRecogniser:
         mapping = (abs(np.fft.fft(data))**2
                    for k in range(1, int(self.N/2 - 1))
                    if self.spectrum_bin_to_pcp_index(
-                       k, ChordRecogniser.ref_freqs[pcp_index]) == pcp_index)
+                       k, PcpCalculator.ref_freqs[pcp_index]) == pcp_index)
         return sum(sum(mapping))
 
     def full_pcp(self, data_frames):
         for frame in data_frames:
             pcp = np.array([self.single_pcp(frame, p)
-                            for p in ChordRecogniser.ref_freqs])
+                            for p in PcpCalculator.ref_freqs])
             yield pcp/pcp.max()
 
 
