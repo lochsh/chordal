@@ -26,9 +26,24 @@ class TestOverlappingFrames:
                           2 * self.ap.frame_size - self.ap.overlap]).all()
 
 
-def test_ref_frequencies():
-    ref_frequencies = [440.000, 466.164, 493.883, 523.251, 554.365,
-                       587.330, 622.254, 659.255, 698.456, 739.989,
-                       783.991, 830.609]
-    assert np.allclose(list(chordal.ChordRecogniser.ref_frequencies.values()),
-                       ref_frequencies)
+def test_ref_freqs():
+    ref_freqs = [440.000, 466.164, 493.883, 523.251, 554.365,
+                 587.330, 622.254, 659.255, 698.456, 739.989,
+                 783.991, 830.609]
+    assert np.allclose(list(chordal.ChordRecogniser.ref_freqs.values()),
+                       ref_freqs)
+
+
+def test_full_pcp_is_not_always_the_same():
+    ap = chordal.AudioProcessor('')
+    frames = ap.overlapping_frames()
+    cr = chordal.ChordRecogniser(ap.f_s, 2048)
+    pcp = cr.full_pcp(frames)
+    for _ in range(10):
+        assert (next(pcp) != next(pcp)).all()
+
+
+def test_single_pcp_zero_for_zero_data():
+    cr = chordal.ChordRecogniser(44100, 2048)
+    for n in cr.ref_freqs:
+        assert cr.single_pcp(np.zeros(100), n) == 0
