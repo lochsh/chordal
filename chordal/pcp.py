@@ -11,8 +11,8 @@ class PcpCalculator:
         self.f_s = sampling_freq
         self.N = fft_length
 
-    def fft_bin_to_freq(self, bin_count):
-        return self.f_s * bin_count / self.N
+    def fft_bin_to_freq(self, k):
+        return self.f_s * k / self.N
 
     def spectrum_bin_to_pcp_index(self, k, f_ref):
         return np.floor(12 * np.log2(self.fft_bin_to_freq(k) / f_ref) % 12)
