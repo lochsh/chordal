@@ -37,13 +37,13 @@ def test_ref_freqs():
 def test_full_pcp_is_not_always_the_same():
     ap = chordal.AudioProcessor('')
     frames = ap.overlapping_frames()
-    cr = chordal.PcpCalculator(ap.f_s, 2048)
-    pcp = cr.full_pcp(frames)
+    pcp_calc = chordal.PcpCalculator(ap.f_s, 2048)
+    pcp = pcp_calc.full_pcp(frames)
     for _ in range(10):
         assert (next(pcp) != next(pcp)).all()
 
 
 def test_single_pcp_zero_for_zero_data():
-    cr = chordal.PcpCalculator(44100, 2048)
-    for n in cr.ref_freqs:
-        assert cr.single_pcp(np.zeros(100), n) == 0
+    pcp_calc = chordal.PcpCalculator(44100, 2048)
+    for n in pcp_calc.ref_freqs:
+        assert pcp_calc.single_pcp(np.zeros(100), n) == 0

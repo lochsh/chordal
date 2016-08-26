@@ -14,8 +14,8 @@ class PcpCalculator:
     def fft_bin_to_freq(self, bin_count):
         return self.f_s * bin_count / self.N
 
-    def spectrum_bin_to_pcp_index(self, l, f_ref):
-        return np.floor(12 * np.log2(self.fft_bin_to_freq(l) / f_ref) % 12)
+    def spectrum_bin_to_pcp_index(self, k, f_ref):
+        return np.floor(12 * np.log2(self.fft_bin_to_freq(k) / f_ref) % 12)
 
     def single_pcp(self, data, pcp_index):
         mapping = (abs(np.fft.fft(data))**2
