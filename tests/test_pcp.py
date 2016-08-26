@@ -39,8 +39,11 @@ def test_full_pcp_is_not_always_the_same():
     frames = ap.overlapping_frames()
     pcp_calc = chordal.PcpCalculator(ap.f_s, 2048)
     pcp = pcp_calc.full_pcp(frames)
-    for _ in range(10):
-        assert (next(pcp) != next(pcp)).all()
+
+    def is_same():
+        for _ in range(100):
+            yield (next(pcp) == next(pcp)).all()
+    assert not all(is_same())
 
 
 def test_single_pcp_zero_for_zero_data():
