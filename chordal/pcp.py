@@ -34,7 +34,7 @@ class Chromagrammer:
         Calculates the intensity of a particular pitch in a single time sample.
 
         Calculates the intensity of a given pitch, defined by the chroma index
-        provided, for a single time-domain sample.  Efftively we are summing
+        provided, for a single time-domain sample.  Effectively we are summing
         the components of the DFT that correspond to this pitch.
         """
         mapping = (abs(np.fft.fft(data))**2
