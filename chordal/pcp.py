@@ -29,7 +29,7 @@ class Chromagrammer:
 
         return np.floor(12 * np.log2(spectrum_bin_to_freq() / f_ref) % 12)
 
-    def chroma_intensity(self, data, chroma_index):
+    def chroma_intensity(self, data, chroma_ind):
         """
         Calculates the intensity of a particular pitch in a single time sample.
 
@@ -40,7 +40,7 @@ class Chromagrammer:
         mapping = (abs(np.fft.fft(data))**2
                    for k in range(1, int(self.N/2 - 1))
                    if self.spectrum_bin_to_chroma_index(
-                       k, Chromagrammer.ref_freqs[chroma_index]) == chroma_index)
+                       k, Chromagrammer.ref_freqs[chroma_ind]) == chroma_ind)
         return sum(sum(mapping))
 
     def chromagram(self, data_frames):
