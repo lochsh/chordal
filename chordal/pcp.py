@@ -5,7 +5,7 @@ from scipy.io import wavfile
 
 class Chromagrammer:
     """
-    Calculates chromagrams, a.k.a. Pitch Class Profile (PCP) vectors.
+    Calculates chromagrams, a.k.a. Pitch Class Profile (PCP) vectors
 
     Calculates chromagrams, 12 dimensional vectors indicating the relative
     intensity of musical semitones across a time-domain signal.  The
@@ -24,19 +24,25 @@ class Chromagrammer:
         return np.floor(12 * np.log2(self.fft_bin_to_freq(k) / f_ref) % 12)
 
     def single_chroma(self, data, pcp_index):
-        """Calculate the chromagram for a single time-domain sample"""
+        """
+        Calculates the PCP level for a particular pitch for a single sample.
+
+        Calculates the PCP level for a given pitch, defined by the pcp_index
+        parameter, for a single time-domain sample.  Effectively, we are
+        summing the components of the DFT that correspond to this pitch.
+        """
         mapping = (abs(np.fft.fft(data))**2
                    for k in range(1, int(self.N/2 - 1))
                    if self.spectrum_bin_to_pcp_index(
                        k, Chromagrammer.ref_freqs[pcp_index]) == pcp_index)
         return sum(sum(mapping))
 
-    def full_chroma(self, data_frames):
+    def chromagram(self, data_frames):
         """Calculate chromagrams for successive time-domain samples"""
         for frame in data_frames:
-            pcp = np.array([self.single_chroma(frame, p)
-                            for p in Chromagrammer.ref_freqs])
-            yield pcp/pcp.max()
+            chroma = np.array([self.single_chroma(frame, c)
+                               for c in Chromagrammer.ref_freqs])
+            yield chroma/chroma.max()
 
 
 class AudioProcessor:

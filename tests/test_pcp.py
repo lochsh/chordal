@@ -35,11 +35,11 @@ def test_ref_freqs():
                        ref_freqs)
 
 
-def test_full_chroma_is_not_always_the_same():
+def test_chromagram_is_not_always_the_same():
     ap = chordal.AudioProcessor('')
     frames = ap.overlapping_frames()
     chroma_calc = chordal.Chromagrammer(ap.f_s, 2048)
-    chroma = chroma_calc.full_chroma(frames)
+    chroma = chroma_calc.chromagram(frames)
 
     def is_same():
         for _ in range(100):
