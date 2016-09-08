@@ -33,9 +33,9 @@ class Chromagrammer:
         """
         Calculates the intensity of a particular pitch in a single time sample.
 
-        Calculates the intensity of a given pitch, defined by the PCP index
+        Calculates the intensity of a given pitch, defined by the chroma index
         provided, for a single time-domain sample.  Efftively we are summing
-        the components of the DFT the correspond to this pitch.
+        the components of the DFT that correspond to this pitch.
         """
         mapping = (abs(np.fft.fft(data))**2
                    for k in range(1, int(self.N/2 - 1))
