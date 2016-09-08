@@ -1,1 +1,1 @@
-from chordal.pcp import AudioProcessor, PcpCalculator
+from chordal.pcp import AudioProcessor, Chromagrammer
