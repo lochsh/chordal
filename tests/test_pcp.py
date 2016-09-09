@@ -76,6 +76,23 @@ def test_chromagram_is_not_always_basically_the_same(data):
     assert not all(is_close())
 
 
+@hypothesis.given(hypothesis.strategies.floats(min_value=0))
+def test_chromagram_is_basically_same_for_sine_wave(freq):
+    ap = chordal.AudioProcessor('')
+    ap.data = np.array([np.sin(2*np.pi * x * freq)
+                        for x in np.linspace(0, 100, 0.1)])
+    ap.process_data()
+
+    frames = ap.overlapping_frames()
+    chromagrammer = chordal.Chromagrammer(ap.f_s, 2048)
+    chromagram = chromagrammer.chromagram(frames)
+
+    def is_close():
+        for _ in range(100):
+            yield np.allclose(next(chromagram), next(chromagram), atol=0.1)
+    assert all(is_close())
+
+
 def test_chroma_intensity_zero_for_zero_data():
     chromagrammer = chordal.Chromagrammer(44100, 2048)
     for n in range(12):
