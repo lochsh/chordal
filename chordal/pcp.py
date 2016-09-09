@@ -37,11 +37,11 @@ class Chromagrammer:
         provided, for a single time-domain sample.  Effectively we are summing
         the components of the DFT that correspond to this pitch.
         """
-        mapping = (abs(np.fft.fft(data))**2
-                   for k in range(1, int(self.N/2 - 1))
+        fft = np.fft.rfft(data, self.N)
+        mapping = (abs(fft[k])**2 for k in range(1, int(self.N/2))
                    if self.spectrum_bin_to_chroma_index(
                        k, Chromagrammer.ref_freqs[chroma_ind]) == chroma_ind)
-        return sum(sum(mapping))
+        return sum(mapping)
 
     def chromagram(self, data_frames):
         """
