@@ -31,7 +31,7 @@ class Chromagrammer:
         def spectrum_bin_to_freq():
             return self.f_s * k / self.N
 
-        return np.floor(12 * np.log2(spectrum_bin_to_freq() / f_ref) % 12)
+        return round(12 * np.log2(spectrum_bin_to_freq() / f_ref) % 12)
 
     def chroma_intensity(self, data, chroma_ind):
         """
