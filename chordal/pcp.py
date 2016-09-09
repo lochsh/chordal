@@ -41,13 +41,14 @@ class Chromagrammer:
             * 12 * log_2(f_bin / f_ref) gives how many semitones the bin
               frequency is above the chroma reference frequency
 
-            * rounding the mod 12 of this gives the nearest chroma index
+            * Rounding this and taking the mod 12 gives the nearest chroma 
+              index
         """
 
         def spectrum_bin_to_freq():
             return self.f_s * k / self.N
 
-        return round(12 * np.log2(spectrum_bin_to_freq() / f_ref) % 12)
+        return round(12 * np.log2(spectrum_bin_to_freq() / f_ref)) % 12
 
     def chroma_intensity(self, data, chroma_ind):
         """
