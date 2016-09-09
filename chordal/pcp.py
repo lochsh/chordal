@@ -1,6 +1,10 @@
 import collections
+import logging
+
 import numpy as np
 from scipy.io import wavfile
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class Chromagrammer:
@@ -62,7 +66,7 @@ class AudioProcessor:
     """
     Performs audio pre-processing,
 
-    Pre-processes audio from a wavfile, combining the two channels and
+    Pre-processes audio from a wavfile, combining the any channels and
     dividing the audio into overlapping frames.
     """
 
@@ -76,7 +80,14 @@ class AudioProcessor:
     @staticmethod
     def read_wavfile(filename):
         f_s, raw_data = wavfile.read(filename)
-        return f_s, raw_data[:, 0] + raw_data[:, 1]
+        try:
+            return f_s, raw_data.sum(1)
+        except ValueError as e:
+            if len(raw_data.shape) == 1:
+                return f_s, raw_data
+            else:
+                logging.error('Provided wav file has unexpected format.')
+                raise e
 
     def overlapping_frames(self):
         """
