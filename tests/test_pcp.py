@@ -54,7 +54,7 @@ def test_chromagram_is_not_always_basically_the_same():
 
     def is_close():
         for _ in range(100):
-            yield np.allclose(next(chromagram), next(chromagram))
+            yield np.allclose(next(chromagram), next(chromagram), atol=0.1)
     assert not all(is_close())
 
 
