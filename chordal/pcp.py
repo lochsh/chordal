@@ -26,7 +26,23 @@ class Chromagrammer:
         self.N = fft_length
 
     def spectrum_bin_to_chroma_index(self, k, f_ref):
-        """Translate spectrum bin k to chroma index"""
+        """
+        Translate spectrum bin index k to nearest chroma index
+        
+        Assign a spectrum bin index k to its nearest chroma index:
+
+            * The frequency represented by the bin is easily found by the
+              product of the sampling frequency and the bin index, divided by
+              the DFT length.
+
+            * log_2(f_bin / f_ref) gives how many octaves the bin frequency is
+              above the chroma reference frequency
+
+            * 12 * log_2(f_bin / f_ref) gives how many semitones the bin
+              frequency is above the chroma reference frequency
+
+            * rounding the mod 12 of this gives the nearest chroma index
+        """
 
         def spectrum_bin_to_freq():
             return self.f_s * k / self.N
