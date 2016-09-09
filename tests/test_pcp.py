@@ -1,12 +1,12 @@
+import hypothesis
+from hypothesis.extra.numpy import arrays
 import numpy as np
 
 import chordal
 
-mock_data = np.array(range(10000))
-
 
 def mock_wavfile_read(*args):
-    return 44100, mock_data
+    return 44100, np.array(range(100))
 
 chordal.AudioProcessor.read_wavfile = mock_wavfile_read
 
@@ -14,16 +14,24 @@ chordal.AudioProcessor.read_wavfile = mock_wavfile_read
 class TestOverlappingFrames:
     ap = chordal.AudioProcessor('')
 
-    def test_overlapping_frames_yields_correct_initial_frame(self):
-        frames = self.ap.overlapping_frames()
-        assert (next(frames) == mock_data[:self.ap.frame_size]).all()
+    @hypothesis.given(arrays(float, 100))
+    def test_overlapping_frames_yields_correct_initial_frame(self, data):
+        TestOverlappingFrames.ap.data = data
+        TestOverlappingFrames.ap.process_data()
 
-    def test_overlapping_frames_advances_correctly(self):
+        frames = self.ap.overlapping_frames()
+        assert (next(frames) == data[:self.ap.frame_size]).all()
+
+    @hypothesis.given(arrays(float, 100))
+    def test_overlapping_frames_advances_correctly(self, data):
+        TestOverlappingFrames.ap.data = data
+        TestOverlappingFrames.ap.process_data()
+
         frames = self.ap.overlapping_frames()
         next(frames)
         assert (next(frames) ==
-                mock_data[self.ap.frame_size - self.ap.overlap:
-                          2 * self.ap.frame_size - self.ap.overlap]).all()
+                data[self.ap.frame_size - self.ap.overlap:
+                     2 * self.ap.frame_size - self.ap.overlap]).all()
 
 
 def test_ref_freqs():
@@ -34,8 +42,12 @@ def test_ref_freqs():
     assert np.allclose(chordal.Chromagrammer.ref_freqs, ref_freqs)
 
 
-def test_chromagram_is_not_always_the_same():
+@hypothesis.given(arrays(float, 100))
+def test_chromagram_is_not_always_the_same(data):
     ap = chordal.AudioProcessor('')
+    ap.data = data
+    ap.process_data()
+
     frames = ap.overlapping_frames()
     chromagrammer = chordal.Chromagrammer(ap.f_s, 2048)
     chromagram = chromagrammer.chromagram(frames)
@@ -46,8 +58,12 @@ def test_chromagram_is_not_always_the_same():
     assert not all(is_same())
 
 
-def test_chromagram_is_not_always_basically_the_same():
+@hypothesis.given(arrays(float, 100))
+def test_chromagram_is_not_always_basically_the_same(data):
     ap = chordal.AudioProcessor('')
+    ap.data = data
+    ap.process_data()
+
     frames = ap.overlapping_frames()
     chromagrammer = chordal.Chromagrammer(ap.f_s, 2048)
     chromagram = chromagrammer.chromagram(frames)

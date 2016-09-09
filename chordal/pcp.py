@@ -90,6 +90,12 @@ class AudioProcessor:
     def __init__(self, file_name, window_len_s=0.025, overlap_s=0.01):
         self.f_s, self.data = self.read_wavfile(file_name)
 
+        self.frame_size = None
+        self.overlap = None
+        self.num_frames = None
+        self.process_data(window_len_s, overlap_s)
+
+    def process_data(self, window_len_s=0.025, overlap_s=0.01):
         self.frame_size = int(self.f_s * window_len_s)
         self.overlap = int(self.f_s * overlap_s)
         self.num_frames = int(len(self.data)/self.overlap)

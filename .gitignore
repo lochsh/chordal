@@ -4,3 +4,4 @@ venv
 *pyc
 tests/.cache
 .cache
+.hypothesis
