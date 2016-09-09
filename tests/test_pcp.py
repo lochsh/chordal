@@ -6,32 +6,34 @@ import chordal
 
 
 def mock_wavfile_read(*args):
-    return 44100, np.array(range(100))
+    return 800, np.array(range(100))
 
 chordal.AudioProcessor.read_wavfile = mock_wavfile_read
 
 
 class TestOverlappingFrames:
-    ap = chordal.AudioProcessor('')
+
+    def setup_method(self):
+        self.ap = chordal.AudioProcessor('')
 
     @hypothesis.given(arrays(float, 100))
     def test_overlapping_frames_yields_correct_initial_frame(self, data):
-        TestOverlappingFrames.ap.data = data
-        TestOverlappingFrames.ap.process_data()
+        self.ap.data = np.nan_to_num(data)
+        self.ap.process_data()
 
         frames = self.ap.overlapping_frames()
-        assert (next(frames) == data[:self.ap.frame_size]).all()
+        assert (next(frames) == self.ap.data[:self.ap.frame_size]).all()
 
     @hypothesis.given(arrays(float, 100))
     def test_overlapping_frames_advances_correctly(self, data):
-        TestOverlappingFrames.ap.data = data
-        TestOverlappingFrames.ap.process_data()
+        self.ap.data = np.nan_to_num(data)
+        self.ap.process_data()
 
         frames = self.ap.overlapping_frames()
         next(frames)
         assert (next(frames) ==
-                data[self.ap.frame_size - self.ap.overlap:
-                     2 * self.ap.frame_size - self.ap.overlap]).all()
+                self.ap.data[self.ap.frame_size - self.ap.overlap:
+                             2 * self.ap.frame_size - self.ap.overlap]).all()
 
 
 def test_ref_freqs():
@@ -45,7 +47,7 @@ def test_ref_freqs():
 @hypothesis.given(arrays(float, 100))
 def test_chromagram_is_not_always_the_same(data):
     ap = chordal.AudioProcessor('')
-    ap.data = data
+    ap.data = np.nan_to_num(data)
     ap.process_data()
 
     frames = ap.overlapping_frames()
@@ -61,7 +63,7 @@ def test_chromagram_is_not_always_the_same(data):
 @hypothesis.given(arrays(float, 100))
 def test_chromagram_is_not_always_basically_the_same(data):
     ap = chordal.AudioProcessor('')
-    ap.data = data
+    ap.data = np.nan_to_num(data)
     ap.process_data()
 
     frames = ap.overlapping_frames()
