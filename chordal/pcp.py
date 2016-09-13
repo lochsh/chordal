@@ -58,10 +58,10 @@ class Chromagrammer:
         provided, for a single time-domain sample.  Effectively we are summing
         the components of the DFT that correspond to this pitch.
         """
-        fft = np.fft.rfft(data, self.N)
+        fft = np.fft.rfft(np.blackman(len(data)) * data, self.N)
         mapping = (abs(fft[k])**2 for k in range(1, int(self.N/2))
                    if self.spectrum_bin_to_chroma_index(
-                       k, Chromagrammer.ref_freqs[chroma_ind]) == chroma_ind)
+                       k, Chromagrammer.ref_freqs[0]) == chroma_ind)
         return sum(mapping)
 
     def chromagram(self, data_frames):
@@ -128,3 +128,9 @@ class AudioProcessor:
             frame.extend(self.data[i * self.frame_size - self.overlap:
                                    (i + 1) * self.frame_size - self.overlap])
             yield frame
+
+
+def chromagram(wav_file, fft_length=2048):
+    audio_processor = AudioProcessor(wav_file)
+    frames = audio_processor.overlapping_frames()
+    return Chromagrammer(audio_processor.f_s, fft_length).chromagram(frames)
