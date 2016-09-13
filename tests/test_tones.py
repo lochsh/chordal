@@ -17,11 +17,20 @@ def test_semitones():
         assert chromagram.argmax() == i % 12
 
 
-def test_major_chords():
-    major_chords = sorted(glob.glob(os.path.join(chords_dir, '*major*')))
+def _test_chords(major=True):
+    third, name = (4, 'major') if major else (3, 'minor')
+    chords = sorted(glob.glob(os.path.join(chords_dir, '*{}*'.format(name))))
 
-    for chord_file, i in zip(major_chords, range(len(major_chords))):
+    for chord_file, i in zip(chords, range(len(chords))):
         chromagram = next(chordal.chromagram(chord_file))
         chroma = sorted(heapq.nlargest(3, range(len(chromagram)),
                         chromagram.take))
-        assert chroma == sorted([i % 12, (i + 4) % 12, (i + 7) % 12])
+        assert chroma == sorted([i % 12, (i + third) % 12, (i + 7) % 12])
+
+
+def test_major_chords():
+    _test_chords()
+
+
+def test_minor_chords():
+    _test_chords(major=False)
