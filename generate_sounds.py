@@ -5,7 +5,7 @@ import subprocess
 import chordal
 
 chroma_names = ['A', 'B_flat', 'B', 'C', 'C_sharp', 'D',
-                'E_flat', 'E', 'F', 'F_sharp', 'G', 'A_flat']
+                'E_flat', 'E', 'F', 'F_sharp', 'G', 'G_sharp']
 
 
 def create_semitones(output_dir):
@@ -19,7 +19,7 @@ def create_semitones(output_dir):
             subprocess.call(shlex.split('ffmpeg -f lavfi -i '
                                         '"sine=frequency={0}:duration=5" '
                                         '{1}/{2}_{3}.wav'
-                                        .format(freq * (octave + 1),
+                                        .format(freq * (2 ** octave),
                                                 output_dir, chroma, octave)))
 
 
