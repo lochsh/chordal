@@ -25,11 +25,12 @@ class Chromagrammer:
         self.f_s = sampling_freq
         self.N = fft_length
 
-    def spectrum_bin_to_chroma_index(self, k, f_ref):
+    def spectrum_bin_to_chroma_index(self, k):
         """
         Translate spectrum bin index k to nearest chroma index
 
-        Assign a spectrum bin index k to its nearest chroma index:
+        Assign a spectrum bin index k to its nearest chroma index, using the
+        reference frequency of the 0th chroma as f_ref:
 
             * The frequency represented by the bin is easily found by the
               product of the sampling frequency and the bin index, divided by
@@ -47,7 +48,8 @@ class Chromagrammer:
 
         def spectrum_bin_to_freq():
             return self.f_s * k / self.N
-
+        
+        f_ref = Chromagrammer.ref_freqs[0]
         return round(12 * np.log2(spectrum_bin_to_freq() / f_ref)) % 12
 
     def chroma_intensity(self, data, chroma_ind):
@@ -58,10 +60,9 @@ class Chromagrammer:
         provided, for a single time-domain sample.  Effectively we are summing
         the components of the DFT that correspond to this pitch.
         """
-        fft = np.fft.rfft(np.blackman(len(data)) * data, self.N)
+        fft = np.fft.rfft(np.hanning(len(data)) * data, self.N)
         mapping = (abs(fft[k])**2 for k in range(1, int(self.N/2))
-                   if self.spectrum_bin_to_chroma_index(
-                       k, Chromagrammer.ref_freqs[0]) == chroma_ind)
+                   if self.spectrum_bin_to_chroma_index(k) == chroma_ind)
         return sum(mapping)
 
     def chromagram(self, data_frames):
