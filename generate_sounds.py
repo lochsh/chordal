@@ -4,8 +4,8 @@ import subprocess
 
 import chordal
 
-chroma_names = ['A', 'B_flat', 'B', 'C', 'C_sharp', 'D',
-                'E_flat', 'E', 'F', 'F_sharp', 'G', 'G_sharp']
+chroma_names = ['A', 'A_sharp', 'B', 'C', 'C_sharp', 'D',
+                'D_sharp', 'E', 'F', 'F_sharp', 'G', 'G_sharp']
 
 
 def create_semitones(output_dir):
@@ -14,7 +14,7 @@ def create_semitones(output_dir):
     except OSError:
         pass
 
-    for octave in range(8):
+    for octave in range(2, 7):
         for freq, chroma in zip(chordal.Chromagrammer.ref_freqs, chroma_names):
             subprocess.call(shlex.split('ffmpeg -f lavfi -i '
                                         '"sine=frequency={0}:duration=5" '
@@ -25,7 +25,7 @@ def create_semitones(output_dir):
 
 def create_chord(tone_files, output_file):
     subprocess.call(shlex.split('ffmpeg -i {0} -filter_complex '
-                                '"[0:a][1:a]amerge=inputs=2[aout]" '
+                                '"[0:a][1:a][2:a]amerge=inputs=3[aout]" '
                                 '-map "[aout]" {1}'
                                 .format(' -i '.join(tone_files), output_file)))
 
