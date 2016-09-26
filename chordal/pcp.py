@@ -48,7 +48,7 @@ class Chromagrammer:
 
         def spectrum_bin_to_freq():
             return self.f_s * k / self.N
-        
+
         f_ref = Chromagrammer.ref_freqs[0]
         return round(12 * np.log2(spectrum_bin_to_freq() / f_ref)) % 12
 
