@@ -13,6 +13,7 @@ def test_semitones():
     semitones = sorted(glob.glob(os.path.join(sounds_dir, '*.wav')))
 
     for note_file, i in zip(semitones, range(len(semitones))):
+        print(note_file)
         chromagram = next(chordal.chromagram(note_file))
         assert chromagram.argmax() == i % 12
 

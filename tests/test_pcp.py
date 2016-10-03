@@ -44,40 +44,9 @@ def test_ref_freqs():
     assert np.allclose(chordal.Chromagrammer.ref_freqs, ref_freqs)
 
 
-@hypothesis.given(arrays(float, 100))
-def test_chromagram_is_not_always_the_same(data):
-    ap = chordal.AudioProcessor('')
-    ap.data = np.nan_to_num(data)
-    ap.process_data()
-
-    frames = ap.overlapping_frames()
-    chromagrammer = chordal.Chromagrammer(ap.f_s, 2048)
-    chromagram = chromagrammer.chromagram(frames)
-
-    def is_same():
-        for _ in range(100):
-            yield (next(chromagram) == next(chromagram)).all()
-    assert not all(is_same())
-
-
-@hypothesis.given(arrays(float, 100))
-def test_chromagram_is_not_always_basically_the_same(data):
-    ap = chordal.AudioProcessor('')
-    ap.data = np.nan_to_num(data)
-    ap.process_data()
-
-    frames = ap.overlapping_frames()
-    chromagrammer = chordal.Chromagrammer(ap.f_s, 2048)
-    chromagram = chromagrammer.chromagram(frames)
-
-    def is_close():
-        for _ in range(100):
-            yield np.allclose(next(chromagram), next(chromagram), atol=0.1)
-    assert not all(is_close())
-
-
-@hypothesis.given(hypothesis.strategies.floats(min_value=0))
-def test_chromagram_is_basically_same_for_sine_wave(freq):
+@hypothesis.given(hypothesis.strategies.floats(min_value=0, max_value=10000))
+def test_chromagram_is_constant_for_sine_wave(freq):
+    """Test chromagram varies minimally across time shifts for pure sine"""
     ap = chordal.AudioProcessor('')
     ap.data = np.array([np.sin(2*np.pi * x * freq)
                         for x in np.linspace(0, 100, 0.1)])
@@ -93,14 +62,15 @@ def test_chromagram_is_basically_same_for_sine_wave(freq):
     assert all(is_close())
 
 
-def test_chroma_intensity_zero_for_zero_data():
+@hypothesis.given(hypothesis.strategies.integers(min_value=100,
+                                                 max_value=10000))
+def test_chroma_intensity_zero_for_zero_data(length):
     chromagrammer = chordal.Chromagrammer(44100, 2048)
-    for n in range(12):
-        assert chromagrammer.chroma_intensity(np.zeros(100), n) == 0
+    assert all(chromagrammer.chroma_intensity(np.zeros(length), n) == 0
+               for n in range(12))
 
 
 def test_spectrum_bin_to_chroma_index_zero_when_fbin_is_fref():
     chromagrammer = chordal.Chromagrammer(44100, 2048)
-    f_ref = 100
-    k = chromagrammer.N * f_ref / chromagrammer.f_s
-    assert chromagrammer.spectrum_bin_to_chroma_index(k, f_ref) == 0
+    k = chromagrammer.N * chordal.Chromagrammer.ref_freqs[0]/chromagrammer.f_s
+    assert chromagrammer.spectrum_bin_to_chroma_index(k) == 0
