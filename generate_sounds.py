@@ -20,7 +20,7 @@ def create_semitones(output_dir):
                                         '"sine=frequency={0}:duration=5" '
                                         '{1}/{2}_{3}.wav'
                                         .format(freq * (2 ** octave),
-                                                output_dir, octave, chroma)))
+                                                output_dir, chroma, octave)))
 
 
 def create_chord(tone_files, output_file):
@@ -42,7 +42,7 @@ def create_chords(input_dir, output_dir, major=True, octave=5):
         chord = [chroma_names[i % 12],
                  chroma_names[(i+third) % 12],
                  chroma_names[(i+7) % 12]]
-        create_chord([os.path.join(input_dir, '{}_{}.wav'.format(octave, note))
+        create_chord([os.path.join(input_dir, '{}_{}.wav'.format(note, octave))
                       for note in chord],
                      os.path.join(output_dir, '{}_{}.wav'
                                               .format(chord[0], name)))

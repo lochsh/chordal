@@ -9,8 +9,9 @@ sounds_dir = 'sounds'
 chords_dir = os.path.join(sounds_dir, 'chords')
 
 
-def test_semitones():
-    semitones = sorted(glob.glob(os.path.join(sounds_dir, '*.wav')))
+def test_semitones(octave=5):
+    semitones = sorted(glob.glob(os.path.join(sounds_dir,
+                                              '*{}.wav'.format(octave))))
 
     for note_file, i in zip(semitones, range(len(semitones))):
         print(note_file)
