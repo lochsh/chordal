@@ -10,7 +10,7 @@ chords_dir = os.path.join(sounds_dir, 'chords')
 
 
 def test_semitones():
-    semitones = sorted(glob.glob(os.path.join(sounds_dir, '*5.wav')))
+    semitones = sorted(glob.glob(os.path.join(sounds_dir, '*.wav')))
 
     for note_file, i in zip(semitones, range(len(semitones))):
         chromagram = next(chordal.chromagram(note_file))
