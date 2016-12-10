@@ -1,5 +1,8 @@
 # Automatic chord recogniser for music!  Currently still under construction
 
+[![Build 
+Status](https://travis-ci.org/lochsh/chordal.svg?branch=master)](https://travis-ci.org/lochsh/chordal)
+
 ## Instructions for those who want to try some development:
 
 * Fork the repo
