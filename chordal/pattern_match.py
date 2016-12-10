@@ -23,12 +23,7 @@ def compare_chromagrams(test, major=True):
     Yields chroma index of the root of the major or minor chord whose
     chromagram is the shortest Euclidean distance from the test chromagram.
     """
-    while True:
-        try:
-            next_test = next(test)
-            d = np.asarray(
-                [distance.euclidean(next_test, chord_pattern(i, major))
-                 for i in range(12)])
-            yield d.argmin()
-        except StopIteration:
-            break
+    for t in test:
+        d = np.asarray([distance.euclidean(t, chord_pattern(i, major))
+                        for i in range(12)])
+        yield d.argmin()
