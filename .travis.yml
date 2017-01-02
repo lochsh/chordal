@@ -10,4 +10,5 @@ script:
   - py.test tests/test_pcp.py
 
 before_script:
+  - pip install --upgrade pip
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
