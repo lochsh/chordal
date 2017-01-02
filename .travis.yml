@@ -10,5 +10,5 @@ script:
   - py.test tests/test_pcp.py
 
 before_script:
-  - pwd > ~/virtualenv/python3.5/site-packages/chordal.pth
-  - pwd > ~/virtualenv/python3.4/site-packages/chordal.pth
+  - pwd > ~/virtualenv/python3.5/python3.5/lib/site-packages/chordal.pth
+  - pwd > ~/virtualenv/python3.4/python3.4/lib/site-packages/chordal.pth
